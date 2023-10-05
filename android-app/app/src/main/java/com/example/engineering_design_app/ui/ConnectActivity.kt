@@ -1,4 +1,4 @@
-package com.example.engineering_design_app
+package com.example.engineering_design_app.ui
 
 import android.hardware.usb.UsbDevice
 import android.os.Bundle
@@ -8,18 +8,19 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.engineering_design_app.R
 import me.aflak.arduino.Arduino
 import me.aflak.arduino.ArduinoListener
 
 
-class MainActivity : AppCompatActivity(), ArduinoListener {
+class ConnectActivity : AppCompatActivity(), ArduinoListener {
     private var arduino: Arduino? = null
     private var displayTextView: TextView? = null
     private var editText: EditText? = null
     private var sendBtn: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_connect)
         displayTextView = findViewById(R.id.diplayTextView)
         editText = findViewById(R.id.editText)
         sendBtn = findViewById(R.id.sendBtn)
