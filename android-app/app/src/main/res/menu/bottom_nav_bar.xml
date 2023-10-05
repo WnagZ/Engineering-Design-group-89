@@ -8,7 +8,7 @@
     <item
             android:id="@+id/nav_water_info"
             android:title="Water Info"
-            android:icon="@drawable/ic_water_info" />
+            android:icon="@drawable/ic_water" />
 
     <item
             android:id="@+id/nav_profile"

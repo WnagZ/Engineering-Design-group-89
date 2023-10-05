@@ -4,33 +4,43 @@ import android.hardware.usb.UsbDevice
 import android.os.Bundle
 import android.os.Handler
 import android.text.method.ScrollingMovementMethod
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.engineering_design_app.R
 import me.aflak.arduino.Arduino
 import me.aflak.arduino.ArduinoListener
 
 
-class ConnectActivity : AppCompatActivity(), ArduinoListener {
+class ConnectFragment : Fragment(), ArduinoListener {
     private var arduino: Arduino? = null
     private var displayTextView: TextView? = null
     private var editText: EditText? = null
     private var sendBtn: Button? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_connect)
-        displayTextView = findViewById(R.id.diplayTextView)
-        editText = findViewById(R.id.editText)
-        sendBtn = findViewById(R.id.sendBtn)
+        displayTextView = view.findViewById(R.id.diplayTextView)
+        editText = view.findViewById(R.id.editText)
+        sendBtn = view.findViewById(R.id.sendBtn)
         displayTextView?.movementMethod = ScrollingMovementMethod()
         sendBtn?.setOnClickListener {
             val editTextString = editText?.text.toString()
             arduino!!.send(editTextString.toByteArray())
             editText?.text?.clear()
         }
-        arduino = Arduino(this)
+        arduino = Arduino(activity)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                          savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onStart() {
@@ -68,6 +78,6 @@ class ConnectActivity : AppCompatActivity(), ArduinoListener {
     }
 
     private fun display(message: String) {
-        runOnUiThread { displayTextView!!.append(message) }
+        activity?.runOnUiThread { displayTextView!!.append(message) }
     }
 }

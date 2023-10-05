@@ -15,7 +15,7 @@
             android:theme="@style/Theme.Engineeringdesignapp">
 
         <activity
-                android:name=".ui.ConnectActivity"
+                android:name=".ui.MainActivity"
                 android:exported="true"
                 >
             <intent-filter>
