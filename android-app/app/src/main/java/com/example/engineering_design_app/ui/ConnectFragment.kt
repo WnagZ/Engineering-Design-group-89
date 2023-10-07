@@ -22,9 +22,11 @@ class ConnectFragment : Fragment(), ArduinoListener {
     private var displayTextView: TextView? = null
     private var editText: EditText? = null
     private var sendBtn: Button? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                          savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_connect, container, false)
         displayTextView = view.findViewById(R.id.diplayTextView)
         editText = view.findViewById(R.id.editText)
         sendBtn = view.findViewById(R.id.sendBtn)
@@ -35,12 +37,7 @@ class ConnectFragment : Fragment(), ArduinoListener {
             editText?.text?.clear()
         }
         arduino = Arduino(activity)
-    }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                          savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return view
     }
 
     override fun onStart() {
@@ -64,7 +61,7 @@ class ConnectFragment : Fragment(), ArduinoListener {
     }
 
     override fun onArduinoMessage(bytes: ByteArray) {
-        display(kotlin.String())
+        display(String())
     }
 
     override fun onArduinoOpened() {
