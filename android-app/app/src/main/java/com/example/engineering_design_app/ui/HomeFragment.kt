@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.FragmentTransaction
 import com.example.engineering_design_app.R
 import me.aflak.arduino.Arduino
 
@@ -27,9 +28,12 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         addDeviceButton = view.findViewById(R.id.add_button)
 
-        addDeviceButton?.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.
-            replace(R.id.container, connectFragment)?.commit()
+        addDeviceButton?.setOnClickListener{
+            val ft = fragmentManager?.beginTransaction()
+            ft?.replace(R.id.container, connectFragment)
+            ft?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            ft?.addToBackStack(null)
+            ft?.commit()
         }
 
     }
