@@ -1,35 +1,43 @@
-package com.example.engineering_design_app
+package com.example.engineering_design_app.ui
 
 import android.hardware.usb.UsbDevice
 import android.os.Bundle
 import android.os.Handler
 import android.text.method.ScrollingMovementMethod
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.example.engineering_design_app.R
 import me.aflak.arduino.Arduino
 import me.aflak.arduino.ArduinoListener
 
 
-class MainActivity : AppCompatActivity(), ArduinoListener {
+class ConnectFragment : Fragment(), ArduinoListener {
     private var arduino: Arduino? = null
     private var displayTextView: TextView? = null
     private var editText: EditText? = null
     private var sendBtn: Button? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        displayTextView = findViewById(R.id.diplayTextView)
-        editText = findViewById(R.id.editText)
-        sendBtn = findViewById(R.id.sendBtn)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                          savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_connect, container, false)
+        displayTextView = view.findViewById(R.id.diplayTextView)
+        editText = view.findViewById(R.id.editText)
+        sendBtn = view.findViewById(R.id.sendBtn)
         displayTextView?.movementMethod = ScrollingMovementMethod()
         sendBtn?.setOnClickListener {
             val editTextString = editText?.text.toString()
             arduino!!.send(editTextString.toByteArray())
             editText?.text?.clear()
         }
-        arduino = Arduino(this)
+        arduino = Arduino(activity)
+        return view
     }
 
     override fun onStart() {
@@ -53,7 +61,7 @@ class MainActivity : AppCompatActivity(), ArduinoListener {
     }
 
     override fun onArduinoMessage(bytes: ByteArray) {
-        display(kotlin.String())
+        display(String())
     }
 
     override fun onArduinoOpened() {
@@ -67,6 +75,6 @@ class MainActivity : AppCompatActivity(), ArduinoListener {
     }
 
     private fun display(message: String) {
-        runOnUiThread { displayTextView!!.append(message) }
+        activity?.runOnUiThread { displayTextView!!.append(message) }
     }
 }
