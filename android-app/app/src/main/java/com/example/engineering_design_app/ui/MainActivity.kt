@@ -3,22 +3,30 @@ package com.example.engineering_design_app.ui
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.net.wifi.p2p.WifiP2pDevice
+import android.net.wifi.p2p.WifiP2pDeviceList
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.engineering_design_app.R
 import com.example.engineering_design_app.arduino.WiFiDirectBroadcastReceiver
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     private var bottomNavigationView: BottomNavigationView? = null
     private var homeFragment = HomeFragment()
     private var waterFragment = WaterFragment()
     private var profileFragment = ProfileFragment()
+    var peers = WifiP2pDeviceList()
+    private var deviceNameList: Array<String>? = null
+    private var deviceArray: Array<WifiP2pDevice>? = null
 
     private val manager: WifiP2pManager? by lazy(LazyThreadSafetyMode.NONE) {
         getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager?
@@ -64,7 +72,9 @@ class MainActivity : AppCompatActivity() {
         }
             false
         })
+
     }
+
     /* register the broadcast receiver with the intent values to be matched */
     override fun onResume() {
         super.onResume()
@@ -79,5 +89,13 @@ class MainActivity : AppCompatActivity() {
         receiver?.also { receiver ->
             unregisterReceiver(receiver)
         }
+    }
+
+    fun getManager(): WifiP2pManager? {
+        return manager
+    }
+
+    fun getChannel(): WifiP2pManager.Channel? {
+        return channel
     }
 }

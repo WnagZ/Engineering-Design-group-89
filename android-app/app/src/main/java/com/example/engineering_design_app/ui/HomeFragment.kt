@@ -1,5 +1,6 @@
 package com.example.engineering_design_app.ui
 
+import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentTransaction
 import com.example.engineering_design_app.R
+import com.google.android.material.snackbar.Snackbar
 import me.aflak.arduino.Arduino
 
 
@@ -27,8 +29,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addDeviceButton = view.findViewById(R.id.add_button)
-
-        addDeviceButton?.setOnClickListener{
             val ft = fragmentManager?.beginTransaction()
             ft?.replace(R.id.container, connectFragment)
             ft?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

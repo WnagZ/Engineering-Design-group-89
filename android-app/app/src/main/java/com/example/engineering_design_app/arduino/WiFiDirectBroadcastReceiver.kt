@@ -3,8 +3,10 @@ package com.example.engineering_design_app.arduino
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.wifi.p2p.WifiP2pDeviceList
 import android.net.wifi.p2p.WifiP2pManager
 import com.example.engineering_design_app.ui.MainActivity
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A BroadcastReceiver that notifies of important Wi-Fi p2p events.
@@ -23,16 +25,18 @@ class WiFiDirectBroadcastReceiver(
                 val state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
                 when (state) {
                     WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
-                        
+                        Snackbar.make(activity.findViewById(android.R.id.content), "Wi-Fi P2P State Enabled", Snackbar.LENGTH_LONG).show()
                     }
 
                     else -> {
-                        // Wi-Fi P2P is not enabled
+                        Snackbar.make(activity.findViewById(android.R.id.content), "Wi-Fi P2P State Disabled", Snackbar.LENGTH_LONG).show()
                     }
                 }
             }
             WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> {
-                // Call WifiP2pManager.requestPeers() to get a list of current peers
+                manager.requestPeers(channel) {
+                    activity.peers = it
+                }
             }
             WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
                 // Respond to new connection or disconnections

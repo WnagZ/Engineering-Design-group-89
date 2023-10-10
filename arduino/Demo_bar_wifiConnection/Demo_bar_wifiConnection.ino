@@ -5,6 +5,9 @@ TFT_eSPI tft = TFT_eSPI(135, 240);
 #define ESP32C3_RX_PIN 9
 #define ESP32C3_TX_PIN 8
 #define PIN_PWR_ON 22
+
+
+
 #define DISPLAY_BACKLIGHT 4
 #define BACKLIGHT_MAX 255
 #define BAR_WIDTH 160
