@@ -9,22 +9,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.example.engineering_design_app.R
+import com.example.engineering_design_app.model.DeviceViewModel
 import com.google.android.material.snackbar.Snackbar
 import me.aflak.arduino.Arduino
 
 
 class HomeFragment : Fragment() {
     private var addDeviceButton: Button? = null
-
+    private var deviceViewModel: DeviceViewModel? = null
     private var connectFragment = ConnectFragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        deviceViewModel = ViewModelProvider(requireActivity()).get()
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +41,5 @@ class HomeFragment : Fragment() {
             ft?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             ft?.addToBackStack(null)
             ft?.commit()
-        }
-
     }
-
 }

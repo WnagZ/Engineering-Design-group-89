@@ -12,9 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.engineering_design_app.R
 import com.example.engineering_design_app.arduino.WiFiDirectBroadcastReceiver
+import com.example.engineering_design_app.model.Device
+import com.example.engineering_design_app.model.DeviceViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
@@ -24,9 +28,9 @@ class MainActivity : AppCompatActivity() {
     private var homeFragment = HomeFragment()
     private var waterFragment = WaterFragment()
     private var profileFragment = ProfileFragment()
-    var peers = WifiP2pDeviceList()
-    private var deviceNameList: Array<String>? = null
+    private var deviceNameList: Array<Device>? = null
     private var deviceArray: Array<WifiP2pDevice>? = null
+    private var deviceViewModel: DeviceViewModel? = null
 
     private val manager: WifiP2pManager? by lazy(LazyThreadSafetyMode.NONE) {
         getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager?
@@ -48,10 +52,16 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
 
+        deviceViewModel = ViewModelProvider(this).get()
+
         channel = manager?.initialize(this, mainLooper, null)
         channel?.also { channel ->
             receiver = manager?.let { WiFiDirectBroadcastReceiver(it, channel, this) }
         }
+
+
+        manager?.let { deviceViewModel!!.setData(it) }
+        channel?.let { deviceViewModel!!.setData(it) }
 
         bottomNavigationView?.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item ->
         when (item.itemId) {
@@ -91,11 +101,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getManager(): WifiP2pManager? {
-        return manager
-    }
-
-    fun getChannel(): WifiP2pManager.Channel? {
-        return channel
+    fun changePeers(peers: WifiP2pDeviceList) {
+        deviceViewModel?.setData(peers)
     }
 }
