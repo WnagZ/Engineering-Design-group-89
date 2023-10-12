@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
-
+        supportActionBar?.hide()
         deviceViewModel = ViewModelProvider(this).get()
 
         channel = manager?.initialize(this, mainLooper, null)
