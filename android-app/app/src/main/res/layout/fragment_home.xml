@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data>
-        <variable name="device" type="com.example.engineering_design_app.model.Device"/>
-    </data>
+<!--<layout>-->
+<!--    <data>-->
+<!--        <variable name="device" type="com.example.engineering_design_app.model.Device"/>-->
+<!--    </data>-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
@@ -39,4 +39,4 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+<!--</layout>-->
