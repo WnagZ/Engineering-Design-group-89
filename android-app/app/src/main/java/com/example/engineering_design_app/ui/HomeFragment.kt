@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import com.example.engineering_design_app.R
+import com.example.engineering_design_app.arduino.ArduinoDiscoveryTask
+import kotlinx.coroutines.launch
 import me.aflak.arduino.Arduino
 
 
@@ -21,6 +24,10 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        lifecycleScope.launch {
+            val result = ArduinoDiscoveryTask().discoverArduino()
+
+        }
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -35,7 +42,5 @@ class HomeFragment : Fragment() {
             ft?.addToBackStack(null)
             ft?.commit()
         }
-
     }
-
 }
