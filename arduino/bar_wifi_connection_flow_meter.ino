@@ -21,8 +21,8 @@ const long debounceTime = 50;
 
 WiFiServer server(80); 
 
-byte sensorInterrupt = 15;  // 0 = digital pin 2
-byte sensorPin = 15;
+byte sensorInterrupt = 21;  // 0 = digital pin 2
+byte sensorPin = 21;
 
 volatile byte pulseCount;
 float calibrationFactor = 11;
@@ -34,7 +34,6 @@ unsigned long oldTime;
 void setup() {
 
   Serial.begin(115200);
-  while (!Serial);
 
   pinMode(PIN_PWR_ON, OUTPUT);
   digitalWrite(PIN_PWR_ON, HIGH);
