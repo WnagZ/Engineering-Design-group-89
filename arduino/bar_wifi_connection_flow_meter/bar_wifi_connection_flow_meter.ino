@@ -111,35 +111,38 @@ void loop() {
 void handleWiFiClients() {
   WiFiClient client = server.available();
   if (client) {
-    String line = client.readStringUntil('\n');
-    line.trim();
-
+    char buf[50];
     // Check if it's a GET request to set the flashing state
-    if (line.startsWith("GET /flash=")) {
-      if (line.indexOf("on") != -1) {
-        shouldFlash = true;
-      } else if (line.indexOf("off") != -1) {
-        shouldFlash = false;
-      }
-    }
-
+    // if (line.startsWith("GET /flash=")) {
+    //   if (line.indexOf("on") != -1) {
+    //     shouldFlash = true;
+    //   } else if (line.indexOf("off") != -1) {
+    //     shouldFlash = false;
+    //   }
+    // }
     while (client.connected()) {
       if (client.available()) {
-        line = client.readStringUntil('\n');
+        String line = client.readStringUntil('\n');
+        Serial.println("line:" + line);
         line.trim();
-        if (line.length() == 0) {
+        if (line == 0) {
           client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println("Connection: close");
-          client.println("Refresh: 5");
+          client.println("Content-Type: text/json");
+          // client.println("Refresh: 5");
           client.println();
-          client.println("<!DOCTYPE HTML>");
-          client.println("<html>");
-          client.println("<body>");
-          client.println("<h1>Device State</h1>");
-          client.println("<p>Flashing: " + String(shouldFlash ? "On" : "Off") + "</p>");
-          client.println("</body>");
-          client.println("</html>");
+          // client.println("<!DOCTYPE HTML>");
+          // client.println("<html>");
+          // client.println("<h1>Device State</h1>");
+          // // client.println("<p>Flashing: " + String(shouldFlash ? "On" : "Off") + "</p>");
+          // // client.println("<p>Mililiters used: " + String(totalMilliLitres) + "</p>");   
+          // client.println("</html>");
+          client.println("{");
+          client.println("\"name\": \"test\",");
+          client.println("\"location\": \"bathroom\",");
+          sprintf(buf,"\"water_usage\": [{ \n \"milliliters\": %lu",totalMilliLitres);
+          client.println(buf);
+          client.println("}]");
+          client.println("}");
           client.flush();
           break;
         }
@@ -156,6 +159,8 @@ void handleFlowMeter() {
     oldTime = millis();
     float flowMilliLitres = (flowRate / 60) * 1000;
     totalMilliLitres += flowMilliLitres;
+    // CHANGE
+    totalMilliLitres += 1;
     pulseCount = 0;
     attachInterrupt(sensorInterrupt, pulseCounter, FALLING);
   }

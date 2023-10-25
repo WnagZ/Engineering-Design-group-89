@@ -5,6 +5,7 @@ import android.net.wifi.p2p.WifiP2pManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.json.JSONArray
 
 class DeviceViewModel : ViewModel() {
 
@@ -31,7 +32,15 @@ class DeviceViewModel : ViewModel() {
     }
 
     fun setData(device: Device) {
-        selectedDevice.value = device
+        if(selectedDevice.value == null){
+            selectedDevice.value = device
+        }
+        else if(selectedDevice.value!!.name == device.name) {
+
+            val array = JSONArray(selectedDevice.value!!.waterUsage).put(JSONArray(device.waterUsage).getJSONObject(0)).toString()
+            selectedDevice.value!!.waterUsage = array
+            val x = selectedDevice.value!!.waterUsage
+        }
     }
 
     fun getSelectedDevice(): LiveData<Device> {

@@ -1,4 +1,4 @@
- #include <WiFiEspAT.h>
+#include <WiFiEspAT.h>
 #include <TFT_eSPI.h>
 TFT_eSPI tft = TFT_eSPI(135, 240);
 
@@ -74,6 +74,7 @@ void setup() {
 }
 
 void loop() {
+  handleWiFiClients();
   if (isResetButtonPressed()) {
     shouldFlash = false; // Turn off flashing if reset button is pressed
     tft.fillScreen(TFT_DARKGREY);  // Reset the screen to its initial state
@@ -122,9 +123,10 @@ void handleWiFiClients() {
   if (client) {
     while (client.connected()) {
       if (client.available()) {
-        String line = client.readStringUntil('\n');
-        line.trim();
-        if (line.length() == 0) {
+        String line = client.readString();
+        // line.trim();
+        Serial.println(line);
+        if (line == 0) {
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
           client.println("Connection: close");
