@@ -161,7 +161,7 @@ void handleFlowMeter() {
     float flowMilliLitres = (flowRate / 60) * 1000;
     totalMilliLitres += flowMilliLitres;
     // CHANGE
-    totalMilliLitres += 1;
+    // totalMilliLitres += 1;
     pulseCount = 0;
     attachInterrupt(sensorInterrupt, pulseCounter, FALLING);
   }
