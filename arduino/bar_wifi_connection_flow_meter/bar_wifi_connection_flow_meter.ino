@@ -139,9 +139,10 @@ void handleWiFiClients() {
           client.println("{");
           client.println("\"name\": \"test\",");
           client.println("\"location\": \"bathroom\",");
-          sprintf(buf,"\"water_usage\": [{ \n \"milliliters\": %lu",totalMilliLitres);
+          // sprintf(buf,"\"water_usage\": [{ \n \"milliliters\": %lu",totalMilliLitres);
+          sprintf(buf,"\"water_usage\": %lu",totalMilliLitres);
           client.println(buf);
-          client.println("}]");
+          // client.println("}]");
           client.println("}");
           client.flush();
           break;

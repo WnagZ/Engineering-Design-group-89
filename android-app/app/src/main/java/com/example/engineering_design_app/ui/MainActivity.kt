@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.example.engineering_design_app.R
 import com.example.engineering_design_app.arduino.WiFiDirectBroadcastReceiver
-import com.example.engineering_design_app.model.AppDatabase
 import com.example.engineering_design_app.model.Device
 import com.example.engineering_design_app.model.DeviceViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -56,8 +55,6 @@ class MainActivity : AppCompatActivity() {
         channel?.also { channel ->
             receiver = manager?.let { WiFiDirectBroadcastReceiver(it, channel, this) }
         }
-
-        val db = AppDatabase.getInstance(this)
 
         manager?.let { deviceViewModel!!.setData(it) }
         channel?.let { deviceViewModel!!.setData(it) }

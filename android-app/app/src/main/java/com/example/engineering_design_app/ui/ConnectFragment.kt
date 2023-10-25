@@ -17,7 +17,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.engineering_design_app.R
-import com.example.engineering_design_app.model.AppDatabase
 import com.example.engineering_design_app.model.Device
 import com.example.engineering_design_app.model.DeviceViewModel
 import java.util.*
@@ -74,33 +73,14 @@ class ConnectFragment : Fragment() {
     private fun getInfoArduino() {
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
-                val dao = AppDatabase.getInstance(requireActivity()).deviceDao()
-                val waterUsage = response.getJSONArray("water_usage")
-                waterUsage.getJSONObject(0).put("time", Calendar.getInstance().time)
-                val device = Device(response.getString("name"), response.getString("location"), waterUsage.toString())
-                val oldDevice = dao.findByName(device.name)
-                dao.deleteAll()
-                if (oldDevice != null && deviceViewModel?.getSelectedDevice()?.value != null) {
-                    deviceViewModel?.setData(oldDevice)
-                    deviceViewModel?.setData(device)
-                    deviceViewModel!!.getSelectedDevice().value?.let {
-                        dao.updateWaterUsage(
-                            it
-                        )
-                    }
-                } else {
-                    deviceViewModel?.setData(device)
-                    deviceViewModel!!.getSelectedDevice().value?.let {
-                        dao.insertAll(
-                            it
-                        )
-                    }
-                }
-
-                val d = AppDatabase.getInstance(requireActivity()).deviceDao().findByName(device.name)
-                display("Response: \n name: ${d.name}\n " +
-                        "location: ${d.location} \n " +
-                        "water usage: ${d.waterUsage}  ")
+                val temp_list = mutableListOf((Calendar.getInstance().time to response.getLong("water_usage")))
+                val device = Device(response.getString("name"), response.getString("location"),
+                temp_list)
+                deviceViewModel!!.setData(device)
+                val d = deviceViewModel!!.getSelectedDevice()
+                display("Response: \n name: ${d.value?.name}\n " +
+                        "location: ${d.value?.location} \n " +
+                        "water usage: ${d.value?.waterUsage}  ")
             },
             { error ->
                 // Handle error
