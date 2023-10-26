@@ -51,15 +51,16 @@ class WaterFragment : Fragment() {
         // set listeners
         chart!!.setDrawGridBackground(false)
         val deviceObserver = Observer<Device> { device ->
-            // Update the UI, in this case, a TextView.
-            currentDevice = device
-            transform()
+            if(device!= null) {
+                currentDevice = device
+                transform()
+            }
         }
         deviceViewModel?.getSelectedDevice()?.observe(requireActivity(), deviceObserver)
     }
 
 
-    fun transform() {
+    private fun transform() {
         val entries = deviceViewModel?.getSelectedDevice()?.value?.waterUsage?.mapIndexed { index, (dateTime, value) ->
             Entry(dateTime.time.toInt().toFloat(), value.toFloat())
 

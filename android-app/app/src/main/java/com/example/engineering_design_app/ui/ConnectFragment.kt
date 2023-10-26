@@ -2,6 +2,7 @@ package com.example.engineering_design_app.ui
 
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -19,18 +20,29 @@ import com.android.volley.toolbox.Volley
 import com.example.engineering_design_app.R
 import com.example.engineering_design_app.model.Device
 import com.example.engineering_design_app.model.DeviceViewModel
+import com.google.android.material.snackbar.Snackbar
 import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 
 class ConnectFragment : Fragment() {
     private var displayTextView: TextView? = null
     private var editText: EditText? = null
     private var sendBtn: Button? = null
+    private var cancelBtn: Button? = null
+
     private var deviceViewModel: DeviceViewModel? = null
     private var channel: WifiP2pManager.Channel? = null
     private var manager: WifiP2pManager? = null
-//    private val url = "http://192.168.187.46/"
-    private val url = "http://192.168.2.10/"
+    private val url = "http://192.168.187.46/"
+//    private val url = "http://192.168.1.30"
+    private var reoccurrence = false
+    private var future: ScheduledFuture<*>? = null
+    private var executor: ScheduledExecutorService? = null
+
 
     private var queue: RequestQueue? = null
 
@@ -40,22 +52,26 @@ class ConnectFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_connect, container, false)
         displayTextView = view.findViewById(R.id.diplayTextView)
-        editText = view.findViewById(R.id.editText)
+//        editText = view.findViewById(R.id.editText)
         sendBtn = view.findViewById(R.id.sendBtn)
+        cancelBtn = view.findViewById(R.id.cancelBtn)
         displayTextView?.movementMethod = ScrollingMovementMethod()
         queue = Volley.newRequestQueue(requireActivity())
         sendBtn?.setOnClickListener {
-            editText?.text?.clear()
-            val editTextString = editText?.text.toString()
+//            editText?.text?.clear()
+//            val editTextString = editText?.text.toString()
             getInfoArduino()
-            editText?.text?.clear()
+//            editText?.text?.clear()
+        }
+        cancelBtn?.setOnClickListener {
+            cancel()
         }
 
         deviceViewModel = ViewModelProvider(requireActivity()).get()
 
-        deviceViewModel!!.getPeers().observe(requireActivity()) {
-            display(it.deviceList.toString())
-        }
+//        deviceViewModel!!.getPeers().observe(requireActivity()) {
+//            display(it.deviceList.toString())
+//        }
         return view
     }
 
@@ -68,6 +84,7 @@ class ConnectFragment : Fragment() {
         deviceViewModel!!.getManager().observe(requireActivity()) {
             manager = it
         }
+
     }
 
     private fun getInfoArduino() {
@@ -81,6 +98,7 @@ class ConnectFragment : Fragment() {
                 display("Response: \n name: ${d.value?.name}\n " +
                         "location: ${d.value?.location} \n " +
                         "water usage: ${d.value?.waterUsage}  ")
+                countdown()
             },
             { error ->
                 // Handle error
@@ -92,5 +110,33 @@ class ConnectFragment : Fragment() {
 
     private fun display(message: String) {
         activity?.runOnUiThread { displayTextView!!.append(message) }
+    }
+
+    private fun connected() {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), "Connected", Snackbar.LENGTH_LONG).show()
+//        val homeFragment = HomeFragment()
+//        requireActivity().supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
+    }
+
+    private fun countdown() {
+        if(!reoccurrence) {
+            executor = Executors.newSingleThreadScheduledExecutor()
+
+            val task = Runnable {
+                // Your code to be executed every 10 seconds goes here
+                getInfoArduino()
+            }
+            // Schedule the task to run every 10 seconds
+            future = executor?.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS)
+            reoccurrence = true
+            connected()
+        }
+    }
+
+    private fun cancel() {
+        future?.cancel(true)
+        executor?.shutdown()
+        reoccurrence = false
+        Snackbar.make(requireActivity().findViewById(android.R.id.content), "Disconnected", Snackbar.LENGTH_LONG).show()
     }
 }

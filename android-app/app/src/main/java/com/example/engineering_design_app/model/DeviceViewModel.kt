@@ -44,6 +44,10 @@ class DeviceViewModel : ViewModel() {
         return selectedDevice
     }
 
+    fun removeSelectedDevice() {
+        selectedDevice.value = null
+    }
+
     fun setData(p: WifiP2pDeviceList) {
         peers.value = p
     }

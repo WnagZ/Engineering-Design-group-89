@@ -10,4 +10,8 @@ class Device (
     var waterUsage : MutableList<Pair<Date, Long>>? = null,
 ) {
     var id:Int? = null
+
+    override fun toString(): String {
+        return "Name: $name\nLocation: $location"
+    }
 }
